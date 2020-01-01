@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+      #upload_section{
+        margin-top: 100px;
+      }
+
+      #upload_section label{
+        display: block !important;
+      }
+
+      .fields{
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 35px;
+      }
+
+      .container{
+        width:90% !important;
+      }
+
+      .fields input{
+        margin-right: 10px;
+      }
+
+      #upload_file_for_edit{
+        margin-left: 30px;
+      }
+    </style>
+</head>
+<body>
+  {% if error_message %}
+  <div class="container">
+    <div class="row">
+        <div class="alert alert-warning" role="alert">
+            {{error_message}}
+        </div>
+    </div>
+  </div>
+  {% endif %}
+  {% if success_message %}
+  <div class="container">
+    <div class="row">
+        <div class="alert alert-success" role="alert">
+            {{success_message}}
+        </div>
+    </div>
+  </div>
+  {% endif %}
+  
+  <div class="container">
+    <div class="row">
+      <h1>Add meta data to table</h1>
+    </div>
+    <div class="row">
+        <form class="form-inline" method="POST" action="/add_meta_data">
+            <label class="sr-only" for="excel_name">Excel Name</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="excel_name" id="excel_name" placeholder="Excel Name">
+
+            <label class="sr-only" for="wheat_type">Wheat type</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="wheat_type" name="wheat_type" placeholder="Wheat type">
+
+            <label class="sr-only" for="type_rust">Type of rust</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="type_rust" name="type_rust" placeholder="Type of rust">
+
+            <label class="sr-only" for="year">Year</label>
+            <input type="number" class="form-control mb-2 mr-sm-2" id="year" name="year" placeholder="Year">
+
+            <label class="sr-only" for="location">Location</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="location" name="location" placeholder="Location">
+
+            <label class="sr-only" for="season">Season</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" id="season" name="season" placeholder="Season">
+    
+            <button type="submit" name="add_sheet_to_table" class="btn btn-primary mb-2">Add</button>
+        </form>
+    </div>
+  </div>
+
+  <div class="container" id="upload_section">
+    <div class="row">
+        <h1>Upload Excel/CSV</h1>
+        <form class="form-inline" id="upload_file_for_edit" enctype="multipart/form-data" method="POST" action="/upload_file">
+          <label class="sr-only" for="file">Upload CSV/Excel</label>
+          <input type="file" name="file" id="file">
+          <button type="submit" class="btn btn-primary mb-2">Add</button>
+      </form>
+    </div>
+    
+      <div class="row">
+        <form method="POST" action="/upload_file_to_db">
+          {% for field in fields %}
+          <div class="fields">
+              <label for="">{{field}}</label>
+              <select name="{{field}}"">
+                  <option value='None'>Null</option>
+                  {% for colum in columns%}
+                  <option value="{{colum}}">{{colum}}</option>
+                  {% endfor %}
+              </select>
+            </div>
+          {% endfor %}
+
+          <!-- Plot_ID, CID, SID, GID, Variety, Pedigree,   Rust_Score_1, Susceptibility_Rating_1, Date_1,  Rust_Score_2, Susceptibility_Rating_2, Date_2,  Rust_Score_3, Susceptibility_Rating_3, Date_3,  Spreadsheet  -->
+          <button type="submit" name="add_sheet_to_table" class="btn btn-primary mb-2 d-block">Upload table to data base</button>
+        </form>
+      </div>
+  </div>
+</body>
+</html>
